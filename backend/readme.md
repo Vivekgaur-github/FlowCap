@@ -319,3 +319,164 @@ Upon successful logout, the endpoint returns a JSON object with a success messag
 }
 ```
 
+## Rides Endpoints Documentation
+
+### Create Ride
+**URL:** `/rides/create`  
+**Method:** `POST`  
+
+**Description:**  
+Creates a new ride record for the authenticated user based on provided pickup, destination, and vehicle type.
+
+**Request Body:**  
+```json
+{
+  "pickup": "123 Main St, City",
+  "destination": "456 Elm St, City",
+  "vehicleType": "car"
+}
+```
+
+**Response:**  
+The created ride object with details including fare and OTP for confirmation.
+
+---
+
+### Get Fare
+**URL:** `/rides/get-fare`  
+**Method:** `GET`  
+
+**Description:**  
+Calculates the fare for a ride based on the pickup and destination addresses.
+
+**Query Parameters:**  
+- `pickup`: [string] (e.g., "123 Main St, City")  
+- `destination`: [string] (e.g., "456 Elm St, City")
+
+**Response:**  
+```json
+{
+  "car": 150,
+  "auto": 90,
+  "moto": 60
+}
+```
+
+---
+
+### Confirm Ride
+**URL:** `/rides/confirm`  
+**Method:** `POST`  
+
+**Description:**  
+Allows an authenticated captain to confirm a pending ride.
+
+**Request Body:**  
+```json
+{
+  "rideId": "rideObjectId"
+}
+```
+
+**Response:**  
+The updated ride object with status set to `accepted` and captain details populated.
+
+---
+
+### Start Ride
+**URL:** `/rides/start-ride`  
+**Method:** `GET`  
+
+**Description:**  
+Starts a confirmed ride after validating the OTP provided by the captain.
+
+**Query Parameters:**  
+- `rideId`: [string] Ride identifier  
+- `otp`: [string] 6-digit OTP
+
+**Response:**  
+The ride object with status updated to `ongoing`.
+
+---
+
+### End Ride
+**URL:** `/rides/end-ride`  
+**Method:** `POST`  
+
+**Description:**  
+Ends an ongoing ride for the authenticated captain.
+
+**Request Body:**  
+```json
+{
+  "rideId": "rideObjectId"
+}
+```
+
+**Response:**  
+The ride object with status updated to `completed`.
+
+---
+
+## Maps Endpoints Documentation
+
+### Get Coordinates
+**URL:** `/maps/get-coordinates`  
+**Method:** `GET`  
+
+**Description:**  
+Retrieves geographical coordinates (latitude and longitude) for a given address.
+
+**Query Parameters:**  
+- `address`: [string] (address to geocode)
+
+**Response:**  
+```json
+{
+  "lat": 40.7128,
+  "lng": -74.0060
+}
+```
+
+---
+
+### Get Distance and Time
+**URL:** `/maps/get-distance-time`  
+**Method:** `GET`  
+
+**Description:**  
+Calculates the distance and duration between an origin and a destination.
+
+**Query Parameters:**  
+- `origin`: [string] (starting address)  
+- `destination`: [string] (ending address)
+
+**Response:**  
+```json
+{
+  "distance": { "text": "5 km", "value": 5000 },
+  "duration": { "text": "12 mins", "value": 720 }
+}
+```
+
+---
+
+### Get Autocomplete Suggestions
+**URL:** `/maps/get-suggestions`  
+**Method:** `GET`  
+
+**Description:**  
+Provides autocomplete suggestions for place names based on input text.
+
+**Query Parameters:**  
+- `input`: [string] (partial address or place name)
+
+**Response:**  
+```json
+[
+  "123 Main St, City",
+  "124 Main St, City",
+  "125 Main St, City"
+]
+```
+
